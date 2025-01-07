@@ -5,16 +5,25 @@
   </mat-card-header>
 
   <mat-card-content>
-    <form>
+    <form [formGroup]="registerForm">
 
       <mat-form-field appearance="fill" class="form-field">
         <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Ingrese su nombre">
+        <input matInput placeholder="Ingrese su nombre" formControlName="name" />
+        @if(registerForm.get('name')?.hasError('required')) {
+          <mat-error>El campo es requerido</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="form-field">
         <mat-label>Email</mat-label>
-        <input matInput placeholder="Ingrese su email">
+        <input matInput placeholder="Ingrese su email" formControlName="email">
+        @if(registerForm.get('email')?.hasError('required')) {
+          <mat-error>El campo es requerido</mat-error>
+        }
+        @if(registerForm.get('email')?.hasError('email')) {
+          <mat-error>Ingrese un email valido</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="form-field">
@@ -24,6 +33,7 @@
           placeholder="Ingrese su contraseña"
           [type]="hide() ? 'password' : 'text'"
           required
+          formControlName="password"
           />
         <button
           mat-icon-button
@@ -33,12 +43,18 @@
         >
           <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
+        @if(registerForm.get('email')?.hasError('required')) {
+          <mat-error>El campo es requerido</mat-error>
+        }
+        @if(registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched) {
+          <mat-error>La contraseña debe tener más de 6 carácteres</mat-error>
+        }
       </mat-form-field>
     </form>
   </mat-card-content>
 
   <mat-card-actions>
-    <button mat-button color="primary">Crear</button>
-    <button  mat-raised-button (click)="login()" color="accent">Ingresar</button>
+    <button mat-button color="primary" (click)="register($event)" [disabled]="isButtonDisabled">Crear</button>
+    <button  mat-raised-button (click)="goLogin()" color="accent">Ingresar</button>
   </mat-card-actions>
 </mat-card>
